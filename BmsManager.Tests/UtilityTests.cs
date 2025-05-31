@@ -1,6 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using BmsManager;
-using CommonLib.TestHelper.UnitTesting;
 using System.Text;
 using BmsManager.Entity;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +14,7 @@ namespace BmsManager.Tests
     {
         [DataTestMethod]
         [DataRow("main-sub-", "main")]
-        [DataRow("main`sub`", "main")]
+        [DataRow("mainï¿½`subï¿½`", "main")]
         [DataRow("main(sub)", "main")]
         [DataRow("main[sub]", "main")]
         [DataRow("main<sub>", "main")]
@@ -46,30 +45,30 @@ namespace BmsManager.Tests
         [DataTestMethod]
         [DataRow(@"F:\bms", "9788e931")]
         [DataRow(@"F:\bms\BMS", "6168b62b")]
-        [DataRow(@"F:\bms\“ïˆÕ“x•\", "17fd18a6")]
+        [DataRow(@"F:\bms\ï¿½ï¿½Õ“xï¿½\", "17fd18a6")]
         [DataRow(@"F:\bms\Events\2005", "318c1bfa")]
         [DataRow(@"F:\bms\Events\2005\Rise in Revolt", "d853334b")]
-        [DataRow(@"F:\bms\Events\2005\‘æŒÜ‰ñ©Ì–³–¼BMSì‰Æ‚ª•¨\‚·I", "80209614")]
+        [DataRow(@"F:\bms\Events\2005\ï¿½ï¿½Ü‰ñ©Ì–ï¿½ï¿½ï¿½BMSï¿½ï¿½Æ‚ï¿½ï¿½ï¿½ï¿½\ï¿½ï¿½ï¿½I", "80209614")]
         public void GetCrc32(string path, string crc)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            Utility.GetCrc32(path).AreEqual(crc);
+            Assert.AreEqual(crc, Utility.GetCrc32(path));
         }
 
         [DataTestMethod]
         [DataRow("Result", "Result")]
-        [DataRow("Result\\", "Result")]
-        [DataRow("Result<", "Resultƒ")]
-        [DataRow("Result>", "Result„")]
-        [DataRow("Result/", "Result^")]
-        [DataRow("Result*", "Result–")]
-        [DataRow("Result:", "ResultF")]
-        [DataRow("Result\"", "Resulth")]
-        [DataRow("Result?", "ResultH")]
-        [DataRow("Result|", "Resultb")]
+        [DataRow("Result\\", "Resultï¿½ï¿½")]
+        [DataRow("Result<", "Resultï¿½ï¿½")]
+        [DataRow("Result>", "Resultï¿½ï¿½")]
+        [DataRow("Result/", "Resultï¿½^")]
+        [DataRow("Result*", "Resultï¿½ï¿½")]
+        [DataRow("Result:", "Resultï¿½F")]
+        [DataRow("Result\"", "Resultï¿½h")]
+        [DataRow("Result?", "Resultï¿½H")]
+        [DataRow("Result|", "Resultï¿½b")]
         public void Rename(string name, string rename)
         {
-            Utility.ToFileNameString(name).AreEqual(rename);
+            Assert.AreEqual(rename, Utility.ToFileNameString(name));
         }
 
         //[TestMethod]

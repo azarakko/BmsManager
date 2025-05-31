@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BmsManager.Entity;
-using CommonLib.TestHelper.UnitTesting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BmsManager.Tests.Data
@@ -20,6 +19,40 @@ namespace BmsManager.Tests.Data
             mock = new MockFileSystem();
             SystemProvider.Instance = new SystemProvider(mock);
         }
+        [TestMethod]
+        public void BmsFolder_Properties_SetCorrectly()
+        {
+            var root = new RootDirectory { Path = @"D:\" };
+            var folder = new BmsFolder 
+            { 
+                Path = @"D:\Test",
+                Title = "Test Title",
+                Artist = "Test Artist",
+                Root = root
+            };
+
+            Assert.AreEqual(@"D:\Test", folder.Path);
+            Assert.AreEqual("Test Title", folder.Title);
+            Assert.AreEqual("Test Artist", folder.Artist);
+            Assert.AreEqual(root, folder.Root);
+            Assert.IsNotNull(folder.Files);
+        }
+
+        [TestMethod]
+        public void BmsFolder_MockFileSystem_Integration()
+        {
+            mock.AddDirectory(@"D:");
+            mock.AddDirectory(@"D:\Test");
+            mock.AddFile(@"D:\Test\test.bms", new MockFileData("test content"));
+
+            var root = new RootDirectory { Path = @"D:\" };
+            var folder = new BmsFolder { Path = @"D:\Test", Root = root };
+
+            Assert.IsTrue(mock.Directory.Exists(@"D:\Test"));
+            Assert.IsTrue(mock.File.Exists(@"D:\Test\test.bms"));
+            Assert.AreEqual(@"D:\Test", folder.Path);
+        }
+
 
         //[DataTestMethod]
         //[DataRow("Result", "Result")]
